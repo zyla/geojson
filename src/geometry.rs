@@ -62,6 +62,52 @@ pub enum Value {
     GeometryCollection(Vec<Geometry>),
 }
 
+pub enum GeometryRef {
+    Point(Vec<f64>),
+}
+
+use std::fmt;
+
+use serde;
+
+impl<'de> Deserialize<'de> for GeometryRef {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        struct Visitor;
+
+        impl<'de> serde::de::Visitor<'de> for Visitor {
+            type Value = GeometryRef;
+
+            fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
+                formatter.write_str("a very special map")
+            }
+
+            fn visit_map<M>(self, mut access: M) -> Result<Self::Value, M::Error>
+            where
+                M: serde::de::MapAccess<'de>,
+            {
+                // TODO: don't unwrap
+                let (key, value): (&str, &str) = access.next_entry()?.unwrap();
+                // upper-case too?
+                match (key, value) {
+                    ("type", "point") => {
+                        let (key, value): (&str, Vec<f64>) = access.next_entry()?.unwrap();
+                        if key != "coordinates" {
+                            panic!("unknown thing")
+                        }
+                        return Ok(GeometryRef::Point(value))
+                    },
+                    _ => unreachable!(), // fixme
+                }
+            }
+        }
+
+        deserializer.deserialize_map(Visitor)
+    }
+}
+
 impl<'a> From<&'a Value> for JsonValue {
     fn from(value: &'a Value) -> JsonValue {
         match *value {
