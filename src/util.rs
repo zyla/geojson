@@ -13,6 +13,7 @@
 // limitations under the License.
 
 use json::{JsonObject, JsonValue};
+use smallvec;
 
 use {Bbox, Error, Feature, FromObject, Geometry, Position};
 
@@ -150,7 +151,7 @@ pub fn get_features(object: &mut JsonObject) -> Result<Vec<Feature>, Error> {
 
 fn json_to_position(json: &JsonValue) -> Result<Position, Error> {
     let coords_array = expect_array!(json);
-    let mut coords = Vec::with_capacity(coords_array.len());
+    let mut coords = smallvec::SmallVec::with_capacity(coords_array.len());
     for position in coords_array {
         coords.push(expect_f64!(position));
     }

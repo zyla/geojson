@@ -193,6 +193,8 @@
 extern crate serde;
 #[macro_use]
 extern crate serde_json;
+#[macro_use]
+extern crate smallvec;
 
 extern crate geo_types;
 extern crate num_traits;
@@ -207,7 +209,7 @@ pub type Bbox = Vec<f64>;
 ///
 /// [GeoJSON Format Specification § 3.1.1]
 /// (https://tools.ietf.org/html/rfc7946#section-3.1.1)
-pub type Position = Vec<f64>;
+pub type Position = smallvec::SmallVec<[f64; 3]>;
 
 pub type PointType = Position;
 pub type LineStringType = Vec<Position>;

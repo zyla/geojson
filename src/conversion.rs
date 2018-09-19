@@ -26,7 +26,7 @@ where
     let x: f64 = point.x().to_f64().unwrap();
     let y: f64 = point.y().to_f64().unwrap();
 
-    vec![x, y]
+    smallvec![x, y]
 }
 
 fn create_line_string_type<T>(line_string: &geo_types::LineString<T>) -> LineStringType
@@ -684,7 +684,7 @@ mod tests {
 
     #[test]
     fn geojson_point_conversion_test() {
-        let coords = vec![100.0, 0.2];
+        let coords = smallvec![100.0, 0.2];
         let geojson_point = Value::Point(coords.clone());
         let geo_point: geo_types::Point<f64> = geojson_point.try_into().unwrap();
 
@@ -694,8 +694,8 @@ mod tests {
 
     #[test]
     fn geojson_multi_point_conversion_test() {
-        let coord1 = vec![100.0, 0.2];
-        let coord2 = vec![101.0, 1.0];
+        let coord1 = smallvec![100.0, 0.2];
+        let coord2 = smallvec![101.0, 1.0];
         let geojson_multi_point = Value::MultiPoint(vec![coord1.clone(), coord2.clone()]);
         let geo_multi_point: geo_types::MultiPoint<f64> = geojson_multi_point.try_into().unwrap();
 
@@ -707,8 +707,8 @@ mod tests {
 
     #[test]
     fn geojson_line_string_conversion_test() {
-        let coord1 = vec![100.0, 0.2];
-        let coord2 = vec![101.0, 1.0];
+        let coord1 = smallvec![100.0, 0.2];
+        let coord2 = smallvec![101.0, 1.0];
         let geojson_line_string = Value::LineString(vec![coord1.clone(), coord2.clone()]);
         let geo_line_string: geo_types::LineString<f64> = geojson_line_string.try_into().unwrap();
 
@@ -720,9 +720,9 @@ mod tests {
 
     #[test]
     fn geojson_multi_line_string_conversion_test() {
-        let coord1 = vec![100.0, 0.2];
-        let coord2 = vec![101.0, 1.0];
-        let coord3 = vec![102.0, 0.8];
+        let coord1 = smallvec![100.0, 0.2];
+        let coord2 = smallvec![101.0, 1.0];
+        let coord3 = smallvec![102.0, 0.8];
         let geojson_multi_line_string = Value::MultiLineString(vec![
             vec![coord1.clone(), coord2.clone()],
             vec![coord2.clone(), coord3.clone()],
@@ -745,12 +745,12 @@ mod tests {
 
     #[test]
     fn geojson_polygon_conversion_test() {
-        let coord1 = vec![100.0, 0.0];
-        let coord2 = vec![101.0, 1.0];
-        let coord3 = vec![101.0, 1.0];
-        let coord4 = vec![104.0, 0.2];
-        let coord5 = vec![100.9, 0.2];
-        let coord6 = vec![100.9, 0.7];
+        let coord1 = smallvec![100.0, 0.0];
+        let coord2 = smallvec![101.0, 1.0];
+        let coord3 = smallvec![101.0, 1.0];
+        let coord4 = smallvec![104.0, 0.2];
+        let coord5 = smallvec![100.9, 0.2];
+        let coord6 = smallvec![100.9, 0.7];
 
         let geojson_multi_line_string_type1 = vec![
             vec![
@@ -800,9 +800,9 @@ mod tests {
 
     #[test]
     fn geojson_polygon_without_interiors_conversion_test() {
-        let coord1 = vec![100.0, 0.0];
-        let coord2 = vec![101.0, 1.0];
-        let coord3 = vec![101.0, 1.0];
+        let coord1 = smallvec![100.0, 0.0];
+        let coord2 = smallvec![101.0, 1.0];
+        let coord3 = smallvec![101.0, 1.0];
 
         let geojson_multi_line_string_type1 = vec![vec![
             coord1.clone(),
@@ -828,12 +828,12 @@ mod tests {
 
     #[test]
     fn geojson_multi_polygon_conversion_test() {
-        let coord1 = vec![100.0, 0.0];
-        let coord2 = vec![101.0, 1.0];
-        let coord3 = vec![101.0, 1.0];
-        let coord4 = vec![104.0, 0.2];
-        let coord5 = vec![100.9, 0.2];
-        let coord6 = vec![100.9, 0.7];
+        let coord1 = smallvec![100.0, 0.0];
+        let coord2 = smallvec![101.0, 1.0];
+        let coord3 = smallvec![101.0, 1.0];
+        let coord4 = smallvec![104.0, 0.2];
+        let coord5 = smallvec![100.9, 0.2];
+        let coord6 = smallvec![100.9, 0.7];
 
         let geojson_line_string_type1 = vec![
             coord1.clone(),
@@ -878,11 +878,11 @@ mod tests {
 
     #[test]
     fn geojson_geometry_collection_conversion_test() {
-        let coord1 = vec![100.0, 0.0];
-        let coord2 = vec![100.0, 1.0];
-        let coord3 = vec![101.0, 1.0];
-        let coord4 = vec![102.0, 0.0];
-        let coord5 = vec![101.0, 0.0];
+        let coord1 = smallvec![100.0, 0.0];
+        let coord2 = smallvec![100.0, 1.0];
+        let coord3 = smallvec![101.0, 1.0];
+        let coord4 = smallvec![102.0, 0.0];
+        let coord5 = smallvec![101.0, 0.0];
 
         let geojson_multi_point = Value::MultiPoint(vec![coord1.clone(), coord2.clone()]);
         let geojson_multi_line_string = Value::MultiLineString(vec![

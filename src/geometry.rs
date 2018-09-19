@@ -228,7 +228,7 @@ mod tests {
     fn encode_decode_geometry() {
         let geometry_json_str = "{\"coordinates\":[1.1,2.1],\"type\":\"Point\"}";
         let geometry = Geometry {
-            value: Value::Point(vec![1.1, 2.1]),
+            value: Value::Point(smallvec![1.1, 2.1]),
             bbox: None,
             foreign_members: None,
         };
@@ -255,7 +255,7 @@ mod tests {
             serde_json::to_value(true).unwrap(),
         );
         let geometry = Geometry {
-            value: Value::Point(vec![1.1, 2.1]),
+            value: Value::Point(smallvec![1.1, 2.1]),
             bbox: None,
             foreign_members: Some(foreign_members),
         };
@@ -279,12 +279,12 @@ mod tests {
             value: Value::GeometryCollection(vec![
                 Geometry {
                     bbox: None,
-                    value: Value::Point(vec![100.0, 0.0]),
+                    value: Value::Point(smallvec![100.0, 0.0]),
                     foreign_members: None,
                 },
                 Geometry {
                     bbox: None,
-                    value: Value::LineString(vec![vec![101.0, 0.0], vec![102.0, 1.0]]),
+                    value: Value::LineString(vec![smallvec![101.0, 0.0], smallvec![102.0, 1.0]]),
                     foreign_members: None,
                 },
             ]),

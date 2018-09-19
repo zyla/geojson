@@ -121,7 +121,7 @@ mod tests {
     fn feature() -> Feature {
         ::Feature {
             geometry: Some(Geometry {
-                value: Value::Point(vec![1.1, 2.1]),
+                value: Value::Point(smallvec![1.1, 2.1]),
                 bbox: None,
                 foreign_members: None,
             }),
@@ -188,7 +188,7 @@ mod tests {
         let feature_json_str = "{\"geometry\":{\"coordinates\":[1.1,2.1],\"type\":\"Point\"},\"id\":0,\"properties\":{},\"type\":\"Feature\"}";
         let feature = ::Feature {
             geometry: Some(Geometry {
-                value: Value::Point(vec![1.1, 2.1]),
+                value: Value::Point(smallvec![1.1, 2.1]),
                 bbox: None,
                 foreign_members: None,
             }),
@@ -221,7 +221,7 @@ mod tests {
         );
         let feature = ::Feature {
             geometry: Some(Geometry {
-                value: Value::Point(vec![1.1, 2.1]),
+                value: Value::Point(smallvec![1.1, 2.1]),
                 bbox: None,
                 foreign_members: None,
             }),
