@@ -33,3 +33,5 @@ harness = false
 all-features = true
 rustdoc-args = ["--cfg", "docsrs"]
 
+[patch.crates-io]
+geo-types = { git = "https://github.com/georust/geo", branch = "mkirk/private-fields" }
