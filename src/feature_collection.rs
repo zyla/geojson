@@ -48,12 +48,14 @@ use crate::{util, Bbox, Feature};
 /// Collect from an iterator:
 ///
 /// ```rust
-/// use geojson::{FeatureCollection, Feature, Value};
+/// use geojson::{Feature, FeatureCollection, Value};
 ///
-/// let fc: FeatureCollection = (0..10).map(|idx| -> Feature {
-///     let c = idx as f64;
-///     Value::Point(vec![1.0 * c, 2.0 * c, 3.0 * c]).into()
-/// }).collect();
+/// let fc: FeatureCollection = (0..10)
+///     .map(|idx| -> Feature {
+///         let c = idx as f64;
+///         Value::Point(vec![1.0 * c, 2.0 * c, 3.0 * c]).into()
+///     })
+///     .collect();
 /// assert_eq!(fc.features.len(), 10);
 /// ```
 #[derive(Clone, Debug, PartialEq)]
