@@ -232,10 +232,10 @@ fn create_geo_coordinate<T>(point_type: &PointType) -> geo_types::Coordinate<T>
 where
     T: CoordFloat,
 {
-    geo_types::Coordinate {
-        x: T::from(point_type[0]).unwrap(),
-        y: T::from(point_type[1]).unwrap(),
-    }
+    geo_types::Coordinate::new(
+        T::from(point_type[0]).unwrap(),
+        T::from(point_type[1]).unwrap(),
+    )
 }
 
 fn create_geo_point<T>(point_type: &PointType) -> geo_types::Point<T>

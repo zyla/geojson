@@ -11,7 +11,7 @@ where
     T: CoordFloat,
 {
     fn from(point: &geo_types::Point<T>) -> Self {
-        let coords = create_point_type(point);
+        let coords = create_point_type(&point.coord());
 
         geometry::Value::Point(coords)
     }
@@ -24,9 +24,8 @@ where
 {
     fn from(multi_point: &geo_types::MultiPoint<T>) -> Self {
         let coords = multi_point
-            .0
             .iter()
-            .map(|point| create_point_type(point))
+            .map(|point| create_point_type(&point.coord()))
             .collect();
 
         geometry::Value::MultiPoint(coords)
@@ -124,7 +123,6 @@ where
 {
     fn from(geometry_collection: &geo_types::GeometryCollection<T>) -> Self {
         let values = geometry_collection
-            .0
             .iter()
             .map(|geometry| geometry::Geometry::new(geometry::Value::from(geometry)))
             .collect();
@@ -140,7 +138,6 @@ where
 {
     fn from(geometry_collection: &geo_types::GeometryCollection<T>) -> Self {
         let values: Vec<Feature> = geometry_collection
-            .0
             .iter()
             .map(|geometry| geometry::Geometry::new(geometry::Value::from(geometry)).into())
             .collect();
@@ -179,12 +176,12 @@ where
     }
 }
 
-fn create_point_type<T>(point: &geo_types::Point<T>) -> PointType
+fn create_point_type<T>(coord: &geo_types::Coordinate<T>) -> PointType
 where
     T: CoordFloat,
 {
-    let x: f64 = point.x().to_f64().unwrap();
-    let y: f64 = point.y().to_f64().unwrap();
+    let x: f64 = coord.x().to_f64().unwrap();
+    let y: f64 = coord.y().to_f64().unwrap();
 
     vec![x, y]
 }
@@ -194,8 +191,8 @@ where
     T: CoordFloat,
 {
     line_string
-        .points_iter()
-        .map(|point| create_point_type(&point))
+        .coords()
+        .map(|point| create_point_type(point))
         .collect()
 }
 
@@ -204,8 +201,8 @@ where
     T: CoordFloat,
 {
     vec![
-        create_point_type(&line_string.start_point()),
-        create_point_type(&line_string.end_point()),
+        create_point_type(&line_string.start()),
+        create_point_type(&line_string.end()),
     ]
 }
 
@@ -230,7 +227,6 @@ where
     T: CoordFloat,
 {
     multi_line_string
-        .0
         .iter()
         .map(|line_string| create_line_string_type(line_string))
         .collect()
@@ -242,8 +238,8 @@ where
 {
     let mut coords = vec![polygon
         .exterior()
-        .points_iter()
-        .map(|point| create_point_type(&point))
+        .coords()
+        .map(|coord| create_point_type(&coord))
         .collect()];
 
     coords.extend(
@@ -261,7 +257,6 @@ where
     T: CoordFloat,
 {
     multi_polygon
-        .0
         .iter()
         .map(|polygon| create_polygon_type(&polygon))
         .collect()
