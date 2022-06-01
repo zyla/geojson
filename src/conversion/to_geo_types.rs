@@ -589,8 +589,12 @@ mod tests {
             }
             ]
         }).to_string();
-        let geojson_feature_collection: crate::GeoJson = geojson_str.parse().unwrap();
-        let geom: geo_types::Geometry<f64> = geojson_feature_collection.try_into().unwrap();
+        let geojson: crate::GeoJson = geojson_str.parse().unwrap();
+        let mut geojson_feature_collection: crate::FeatureCollection = geojson.try_into().unwrap();
+        let feature: crate::Feature = geojson_feature_collection.features.remove(0);
+
+        use std::convert::TryFrom;
+        let geom: geo_types::Geometry<f64> = geo_types::Geometry::try_from(feature).unwrap();
         dbg!(&geom);
     }
 }
