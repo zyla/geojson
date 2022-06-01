@@ -133,48 +133,45 @@ where
 }
 
 #[cfg_attr(docsrs, doc(cfg(feature = "geo-types")))]
-impl<T> TryFrom<geometry::Value> for geo_types::Geometry<T>
+impl<T> From<geometry::Value> for geo_types::Geometry<T>
 where
     T: CoordFloat,
 {
-    type Error = GJError;
-
-    fn try_from(value: geometry::Value) -> Result<Self, Self::Error> {
+    fn from(value: geometry::Value) -> Self {
         match value {
             geometry::Value::Point(ref point_type) => {
-                Ok(geo_types::Geometry::Point(create_geo_point(point_type)))
+                geo_types::Geometry::Point(create_geo_point(point_type))
             }
             geometry::Value::MultiPoint(ref multi_point_type) => {
-                Ok(geo_types::Geometry::MultiPoint(geo_types::MultiPoint(
+                geo_types::Geometry::MultiPoint(geo_types::MultiPoint(
                     multi_point_type
                         .iter()
                         .map(|point_type| create_geo_point(&point_type))
                         .collect(),
-                )))
-            }
-            geometry::Value::LineString(ref line_string_type) => Ok(
-                geo_types::Geometry::LineString(create_geo_line_string(line_string_type)),
-            ),
-            geometry::Value::MultiLineString(ref multi_line_string_type) => {
-                Ok(geo_types::Geometry::MultiLineString(
-                    create_geo_multi_line_string(multi_line_string_type),
                 ))
             }
-            geometry::Value::Polygon(ref polygon_type) => Ok(geo_types::Geometry::Polygon(
-                create_geo_polygon(polygon_type),
-            )),
-            geometry::Value::MultiPolygon(ref multi_polygon_type) => Ok(
-                geo_types::Geometry::MultiPolygon(create_geo_multi_polygon(multi_polygon_type)),
-            ),
+            geometry::Value::LineString(ref line_string_type) => {
+                geo_types::Geometry::LineString(create_geo_line_string(line_string_type))
+            }
+            geometry::Value::MultiLineString(ref multi_line_string_type) => {
+                geo_types::Geometry::MultiLineString(create_geo_multi_line_string(
+                    multi_line_string_type,
+                ))
+            }
+            geometry::Value::Polygon(ref polygon_type) => {
+                geo_types::Geometry::Polygon(create_geo_polygon(polygon_type))
+            }
+            geometry::Value::MultiPolygon(ref multi_polygon_type) => {
+                geo_types::Geometry::MultiPolygon(create_geo_multi_polygon(multi_polygon_type))
+            }
             geometry::Value::GeometryCollection(ref gc_type) => {
-                let gc = geo_types::Geometry::GeometryCollection(geo_types::GeometryCollection(
+                geo_types::Geometry::GeometryCollection(geo_types::GeometryCollection(
                     gc_type
                         .iter()
                         .cloned()
                         .map(|geom| geom.try_into())
-                        .collect::<Result<Vec<geo_types::Geometry<T>>, GJError>>()?,
-                ));
-                Ok(gc)
+                        .collect::<Vec<geo_types::Geometry<T>>>(),
+                ))
             }
         }
     }
