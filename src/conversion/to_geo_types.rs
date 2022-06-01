@@ -310,6 +310,7 @@ where
 #[cfg(test)]
 mod tests {
     use crate::{Geometry, Value};
+    use serde_json::json;
     use geo_types;
 
     use std::convert::TryInto;
@@ -554,10 +555,42 @@ mod tests {
         let geojson_geometry = Geometry::from(Value::Point(coords.clone()));
         let geo_geometry: geo_types::Geometry<f64> = geojson_geometry
             .try_into()
-            .expect("Shoudl be able to convert to geo_types::Geometry");
+            .expect("Should be able to convert to geo_types::Geometry");
         let geo_point: geo_types::Point<_> =
             geo_geometry.try_into().expect("this should be a point");
         assert_almost_eq!(geo_point.x(), coords[0], 1e-6);
         assert_almost_eq!(geo_point.y(), coords[1], 1e-6);
+    }
+
+    #[test]
+    fn feature_collection_with_geom_collection() {
+        let geojson_str = json!({
+            "type": "FeatureCollection",
+            "features": [
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "GeometryCollection",
+                    "geometries": [
+                    {
+                        "type": "Polygon",
+                        "coordinates": [
+                            [
+                                [1.0, 1.0],
+                                [2.0, 2.0],
+                                [3.0, 1.0],
+                                [1.0, 1.0]
+                            ]
+                        ]
+                    }
+                    ]
+                },
+                "properties": {}
+            }
+            ]
+        }).to_string();
+        let geojson_feature_collection: crate::GeoJson = geojson_str.parse().unwrap();
+        let geom: geo_types::Geometry<f64> = geojson_feature_collection.try_into().unwrap();
+        dbg!(&geom);
     }
 }
