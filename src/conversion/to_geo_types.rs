@@ -169,7 +169,7 @@ where
                     gc_type
                         .iter()
                         .cloned()
-                        .map(|geom| geom.try_into())
+                        .map(|geom| geom.into())
                         .collect::<Vec<geo_types::Geometry<T>>>(),
                 ))
             }
@@ -178,14 +178,12 @@ where
 }
 
 #[cfg_attr(docsrs, doc(cfg(feature = "geo-types")))]
-impl<T> TryFrom<Geometry> for geo_types::Geometry<T>
+impl<T> From<Geometry> for geo_types::Geometry<T>
 where
     T: CoordFloat,
 {
-    type Error = GJError;
-
-    fn try_from(val: Geometry) -> Result<geo_types::Geometry<T>, Self::Error> {
-        val.value.try_into()
+    fn from(val: Geometry) -> geo_types::Geometry<T> {
+        val.value.into()
     }
 }
 
@@ -199,7 +197,7 @@ where
     fn try_from(val: Feature) -> Result<geo_types::Geometry<T>, Self::Error> {
         match val.geometry {
             None => Err(GJError::FeatureHasNoGeometry(val)),
-            Some(geom) => geom.try_into(),
+            Some(geom) => Ok(geom.into()),
         }
     }
 }
@@ -227,7 +225,7 @@ where
 
     fn try_from(val: GeoJson) -> Result<geo_types::Geometry<T>, Self::Error> {
         match val {
-            GeoJson::Geometry(geom) => geom.try_into(),
+            GeoJson::Geometry(geom) => Ok(geom.into()),
             GeoJson::Feature(feat) => feat.try_into(),
             GeoJson::FeatureCollection(fc) => fc.try_into(),
         }

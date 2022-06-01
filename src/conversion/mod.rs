@@ -18,7 +18,6 @@ use crate::geojson::GeoJson;
 use crate::geojson::GeoJson::{Feature, FeatureCollection, Geometry};
 
 use crate::Error as GJError;
-use std::convert::TryInto;
 
 #[cfg(test)]
 macro_rules! assert_almost_eq {
@@ -67,6 +66,8 @@ pub(crate) mod from_geo_types;
 pub(crate) mod to_geo_types;
 
 // Process top-level `GeoJSON` items, returning a geo_types::GeometryCollection or an Error
+//
+// FIXME: this is actually infallible.
 fn process_geojson<T>(gj: &GeoJson) -> Result<geo_types::GeometryCollection<T>, GJError>
 where
     T: CoordFloat,
@@ -78,17 +79,17 @@ where
                 .iter()
                 // Only pass on non-empty geometries
                 .filter_map(|feature| feature.geometry.as_ref())
-                .map(|geometry| geometry.clone().try_into())
-                .collect::<Result<_, _>>()?,
+                .map(|geometry| geo_types::Geometry::from(geometry.clone()))
+                .collect::<Vec<_>>(),
         )),
         Feature(feature) => {
             if let Some(geometry) = &feature.geometry {
-                Ok(GeometryCollection(vec![geometry.clone().try_into()?]))
+                Ok(GeometryCollection(vec![geo_types::Geometry::from(geometry.clone())]))
             } else {
                 Ok(GeometryCollection(vec![]))
             }
         }
-        Geometry(geometry) => Ok(GeometryCollection(vec![geometry.clone().try_into()?])),
+        Geometry(geometry) => Ok(GeometryCollection(vec![geo_types::Geometry::from(geometry.clone())]))
     }
 }
 
