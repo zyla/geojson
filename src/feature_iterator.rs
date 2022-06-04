@@ -164,7 +164,7 @@ mod tests {
     }
 
     #[test]
-    fn stream_read_test() {
+    fn stream_read_test_1() {
         let mut fi = FeatureIterator::new(BufReader::new(fc().as_bytes()));
         assert_eq!(
             Geometry {
@@ -202,5 +202,29 @@ mod tests {
             fi.next().unwrap().unwrap().geometry.unwrap()
         );
         assert!(fi.next().is_none());
+    }
+
+    const FEATURE: &str = r#"
+            {
+                "type": "Feature",
+                "properties": {"fill":"red"},
+                "geometry": {
+                  "type": "Point",
+                  "coordinates": [1.0, 2.0]
+                }
+              }
+        "#;
+
+    #[test]
+    fn stream_read_test_2() {
+        let mut fi = FeatureIterator::new(BufReader::new(FEATURE.as_bytes()));
+        assert_eq!(
+            Geometry {
+                bbox: None,
+                value: Value::Point(vec![102.0, 0.5]),
+                foreign_members: None,
+            },
+            fi.next().unwrap().unwrap().geometry.unwrap()
+        );
     }
 }
