@@ -2,6 +2,12 @@
 
 ## UNRELEASED
 
+* Added `GeometryCollection::try_from(&GeoJson)` and deprecated
+  `quick_collection` for conventional naming and simpler docs.
+  * <https://github.com/georust/geojson/pulls/214>
+
+## 0.24.0
+
 * Fix: FeatureIterator errors when reading "features" field before "type" field.
   * <https://github.com/georust/geojson/pull/200>
 * Added `geojson::{ser, de}` helpers to convert your custom struct to and from GeoJSON. 
