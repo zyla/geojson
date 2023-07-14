@@ -234,13 +234,6 @@ impl GeoJson {
         serde_json::from_reader(rdr)
     }
 
-    /// Convenience wrapper for [serde_json::to_string()]
-    pub fn to_string(self) -> Result<String> {
-        ::serde_json::to_string(&self)
-            .map_err(|err| Error::MalformedJson(err))
-            .and_then(|s| Ok(s.to_string()))
-    }
-
     /// Convenience wrapper for [serde_json::to_string_pretty()]
     pub fn to_string_pretty(self) -> Result<String> {
         ::serde_json::to_string_pretty(&self)

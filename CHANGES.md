@@ -3,13 +3,12 @@
 ## Unreleased
 
 * Added conversion from `Vec<Feature>` to `GeoJson`.
+* Added `GeoJson::to_string_pretty` as convenience wrappers around the same `serde_json` methods.
 
 ## 0.24.1
 
 * Modified conversion from JSON to reject zero- and one-dimensional positions.
   * PR: <https://github.com/georust/geojson/pull/225>
-
-* Added `geojson::{to_string, to_string_pretty}` as convenience wrappers around the same `serde_json` methods.
 
 ## 0.24.0
 

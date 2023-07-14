@@ -11,7 +11,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     
     let geojson: GeoJson = feature.into();
 
-    println!("{}", &geojson.clone().to_string()?);
+    println!("{}", &geojson.to_string());
     println!("{}", &geojson.to_string_pretty()?);
 
     Ok(())
